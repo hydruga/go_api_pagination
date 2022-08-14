@@ -37,23 +37,22 @@ func main() {
 	fmt.Println("Total aliens ", aliens)
 }
 
-func (character *Character) GetJson(url string) error {
+func (character *Character) GetJson(url string) {
 	resp, err := http.Get(url)
 	if err != nil {
-		fmt.Println("Error encountered %s :", err)
-		
+		fmt.Println("Error: Issues fetching url ", err)
+
 	}
 	//defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("Error: Cannot read response body ", err)
-		
+
 	}
 	if err := json.Unmarshal([]byte(body), &character); err != nil {
 		fmt.Println("Error: Cannot unmarshal JSON ", err)
-		
 	}
-	
+
 }
 
 func (character *Character) getTotalAliens() int {
