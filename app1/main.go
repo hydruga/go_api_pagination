@@ -40,21 +40,20 @@ func main() {
 func (character *Character) GetJson(url string) error {
 	resp, err := http.Get(url)
 	if err != nil {
-		err := fmt.Errorf("Error encountered %s :", err)
-		fmt.Println(err)
-		return err
+		fmt.Println("Error encountered %s :", err)
+		
 	}
 	//defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("Error: Cannot read response body ", err)
-		return err
+		
 	}
 	if err := json.Unmarshal([]byte(body), &character); err != nil {
 		fmt.Println("Error: Cannot unmarshal JSON ", err)
-		return err
+		
 	}
-	return nil
+	
 }
 
 func (character *Character) getTotalAliens() int {
