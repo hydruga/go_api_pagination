@@ -1,1 +1,1 @@
-# go_api_pagination
+Exploring common patterns and concepts of Json Response data in conjunction with Go.
