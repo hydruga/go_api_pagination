@@ -43,7 +43,7 @@ func (character *Character) GetJson(url string) {
 		fmt.Println("Error: Issues fetching url ", err)
 
 	}
-	//defer resp.Body.Close()
+	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("Error: Cannot read response body ", err)
