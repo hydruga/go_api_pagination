@@ -30,30 +30,15 @@ func main() {
 
 	character := Character{}
 	character.GetJson(base_url)
-	// // If we know the amount of pages we can use uncommented code
-	//pages := character.Info.Pages
-	var pages int
-	//fmt.Println(pages)
-
 	ch := make(chan int)
-	// ch := make(chan int, pages)		// buffered channel
 	done := make(chan struct{})
-
+	var pages int
 	go func() {
 		read := 0
 
-		// LOOP:
-		//for i := range ch {
 		for {
 			read++
-			// if read == pages {
-			// 	break
-			// }
-			// if i == 0 {
-			// 	goto LOOP
-			// }
 			character := Character{}
-			//url := base_url + "?page=" + strconv.Itoa(i)
 			url := base_url + "?page=" + strconv.Itoa(read)
 			r, err := http.Get(url)
 			fmt.Println("Retrieving ", url)
@@ -76,9 +61,6 @@ func main() {
 		}
 		close(done)
 	}()
-	// for i := 0; i < pages; i++ {
-	// 	ch <- i
-	// }
 
 	for i := 0; i < pages; i++ {
 		ch <- i
@@ -98,3 +80,66 @@ func (c *Character) GetJson(url string) {
 	json.Unmarshal(body, &c)
 
 }
+
+// **************** ADJUSTED FOR KNOWN NUMBER OF CHANNELS *************************
+// WE USE BUFFERED CHANNEL HERE
+//
+
+// func main() {
+// 	base_url := "https://rickandmortyapi.com/api/character"
+// 	var totalAliens int
+
+// 	character := Character{}
+// 	character.GetJson(base_url)
+
+// 	// If we know the amount of pages we can use uncommented code
+// 	pages := character.Info.Pages
+// 	var pages int
+
+// 	ch := make(chan int, pages)		// buffered channel
+// 	done := make(chan struct{})
+
+// 	go func() {
+// 		read := 0
+
+// 		LOOP:
+// 		for i := range ch {
+
+// 			read++
+// 			if read == pages {
+// 				break
+// 			}
+// 			if i == 0 {
+// 				goto LOOP
+// 			}
+// 			character := Character{}
+// 			url := base_url + "?page=" + strconv.Itoa(i)
+
+// 			r, err := http.Get(url)
+// 			fmt.Println("Retrieving ", url)
+// 			if err != nil {
+// 				//close the channel
+// 				pages = read
+// 				break
+// 			}
+// 			body, err := io.ReadAll(r.Body)
+
+// 			json.Unmarshal(body, &character)
+// 			if character.Error != "" {
+// 				break
+// 			}
+// 			for _, item := range character.Results {
+// 				if item.Species == "Alien" {
+// 					totalAliens++
+// 				}
+// 			}
+// 		}
+// 		close(done)
+// 	}()
+// 	for i := 0; i < pages; i++ {
+// 		ch <- i
+// 	}
+// 	<-done // block until ch is done
+// 	close(ch)
+// 	fmt.Println("Total aliens ", totalAliens)
+// }
